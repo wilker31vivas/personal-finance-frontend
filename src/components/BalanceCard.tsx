@@ -3,7 +3,7 @@ import { getBalance } from '../api/transactions'
 import type { Balance } from "../types/types";
 import { formatCurrency } from '../utils/formatCurrency'
 import ErrorMessage from './ErrorMessage'
-import Loader from './Loader'
+import Loader from "./Loader";
 
 const INITIAL_BALANCE: Balance = {
     transactionsAmount: {
@@ -52,9 +52,9 @@ export default function BalanceCard() {
 
     return (
         <div className="flex flex-col sm:flex-row justify-evenly gap-4 text-start">
-            <StatCard title="Total incomes" amount={income} change={balanceData.change.income} bgColor="bg-emerald-500" titleColor="text-white"></StatCard>
-            <StatCard title="Total expenses" amount={expense} change={balanceData.change.expense} bgColor="bg-rose-500" titleColor="text-white"></StatCard>
-            <StatCard title="Balance" amount={balance} change={null} bgColor="bg-white" textColor={balance !== null && balance >= 0 ? 'text-green-600' : 'text-red-600'}></StatCard>
+            <StatCard title="Total incomes" amount={income} change={balanceData.change.income} bgColor="bg-sucess" titleColor="text-surface"></StatCard>
+            <StatCard title="Total expenses" amount={expense} change={balanceData.change.expense} bgColor="bg-danger" titleColor="text-surface"></StatCard>
+            <StatCard title="Balance" amount={balance} change={null} bgColor="bg-white" textColor={balance !== null && balance >= 0 ? 'text-sucess' : 'text-danger'}></StatCard>
         </div>
     )
 }

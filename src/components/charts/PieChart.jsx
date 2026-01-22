@@ -130,7 +130,7 @@ export default function PieChart({ data }) {
     return (
         <div className="w-full mt-4">
 
-            <div className="bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6">
+            <div className="bg-surface rounded-lg shadow-lg p-3 sm:p-4 md:p-6">
                 <ReactECharts
                     option={getOption()}
                     style={{

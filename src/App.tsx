@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import './App.css'
 const API_URL = import.meta.env.VITE_API_URL;
 import BalanceCard from './components/BalanceCard';
 import Header from './components/Header'
 import PieChart from './components/charts/PieChart'
 import Bar from './components/charts/Bar'
 import Line from './components/charts/Line'
+
 
 function App() {
   // const [transactions, setTransactions] = useState([]);
@@ -18,7 +18,7 @@ function App() {
 
 
   return (
-    <div className='bg-gradient-to-br from-slate-50 to-slate-100 p-6'>
+    <div className='bg-body p-6'>
       <Header></Header>
       <BalanceCard></BalanceCard>
       {/*<Transactions></Transactions> */}

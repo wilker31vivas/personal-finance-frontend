@@ -39,3 +39,8 @@ export interface TransactionFilters {
     month?: string,
     year?: string,
 }
+
+export interface DataOptions {
+  value: number,
+  name: string
+}

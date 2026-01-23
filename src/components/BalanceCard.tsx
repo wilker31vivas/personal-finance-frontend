@@ -70,7 +70,7 @@ interface BalanceCardItemProps {
 
 function StatCard({ title, amount, change, bgColor, textColor, titleColor }: BalanceCardItemProps) {
     return (
-        <div className={`${bgColor} p-4 w-full rounded-md ${titleColor} shadow-md`}>
+        <div className={`${bgColor} p-4 w-full ${titleColor} shadow-md`}>
             <h2 className="text-sm font-medium mb-1">{title}</h2>
             <p className={`text-xl sm:text-2xl font-bold ${textColor}`}>
                 {formatCurrency(amount)}

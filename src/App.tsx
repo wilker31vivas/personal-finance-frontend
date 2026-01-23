@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react'
 const API_URL = import.meta.env.VITE_API_URL;
 import BalanceCard from './components/BalanceCard';
 import Header from './components/Header'
-import PieChart from './components/charts/PieChart'
-import Bar from './components/charts/Bar'
-import Line from './components/charts/Line'
+import ChartsCards from './components/ChartsCards'
+
 
 
 function App() {
@@ -18,19 +17,11 @@ function App() {
 
 
   return (
-    <div className='bg-body p-6'>
+    <div className='flex flex-col bg-body p-6 gap-4'>
       <Header></Header>
       <BalanceCard></BalanceCard>
       {/*<Transactions></Transactions> */}
-      <PieChart data={[
-        { value: 12500, name: 'Electrónica' },
-        { value: 8300, name: 'Ropa' },
-        { value: 6200, name: 'Alimentos' },
-        { value: 4800, name: 'Hogar' },
-        { value: 3200, name: 'Deportes' }
-      ]}></PieChart>
-      <Bar></Bar>
-      <Line></Line>
+      <ChartsCards></ChartsCards>
     </div>
   )
 }

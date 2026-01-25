@@ -44,3 +44,8 @@ export interface DataOptions {
   value: number,
   name: string
 }
+
+export type CategoriesFilters = {
+    month?: string,
+    year?: string,
+}

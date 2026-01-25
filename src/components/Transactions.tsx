@@ -3,7 +3,7 @@ import { getTransactions, getYears, getCategories } from '../api/transactions'
 import type { Transaction, TransactionFilters } from "../types/types"
 import { formatCurrency } from '../utils/formatCurrency'
 import ErrorMessage from './ErrorMessage';
-import FiltersCard from './FiltersCard'
+import { FiltersCard } from './FiltersCard'
 import TransactionsTable from './TransactionsTable'
 
 
@@ -13,7 +13,6 @@ export default function Transactions() {
     const [transactions, setTransactions] = useState<Transaction[]>([])
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
-    const [allYears, setAllYears] = useState<number[]>([])
     const [categories, setCategories] = useState<string[]>([])
     const [filters, setFilters] = useState<TransactionFilters>(() => {
         const saved = localStorage.getItem('filters')
@@ -32,15 +31,6 @@ export default function Transactions() {
         const newFilters = { ...filters, [key]: value || "" }
         setFilters(newFilters)
         fetchTransactions(newFilters)
-    }
-
-    async function loadYears() {
-        try {
-            const y = await getYears()
-            setAllYears(y)
-        } catch (err) {
-            console.error('Error loading years:', err)
-        }
     }
 
     async function loadCategories() {
@@ -70,7 +60,6 @@ export default function Transactions() {
 
     useEffect(() => {
         fetchTransactions(filters)
-        loadYears()
         loadCategories()
     }, [])
 
@@ -98,7 +87,7 @@ export default function Transactions() {
                 </div>
 
                 {/* Filters Card */}
-                <FiltersCard allYears={allYears} filters={filters} updateFilter={updateFilter} categories={categories} resetFilters={resetFilters} ></FiltersCard>
+                <FiltersCard filters={filters} updateFilter={updateFilter} categories={categories} resetFilters={resetFilters} ></FiltersCard>
 
                 {/* Transactions Table */}
                 <TransactionsTable loading={loading} transactions={transactions} setFilters={setFilters} fetchTransactions={fetchTransactions}></TransactionsTable>

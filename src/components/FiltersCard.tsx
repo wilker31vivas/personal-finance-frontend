@@ -1,50 +1,34 @@
 import type { TransactionFilters } from "../types/types"
+import { getYears } from '../api/transactions'
+import { useEffect, useState } from "react"
 
 
-interface FiltersCardProps {
-    allYears: number[]
-    filters: TransactionFilters
-    updateFilter: <K extends keyof TransactionFilters>(key: K, value: TransactionFilters[K]) => void
+interface FiltersContainerProps {
+    filters: filters
+    updateFilter: updateFilter
     categories: string[]
     resetFilters: () => void
 }
 
-export default function FiltersCard({ allYears, filters, updateFilter, categories, resetFilters }: FiltersCardProps) {
+type filters = TransactionFilters
+type updateFilter = <K extends keyof TransactionFilters>(key: K, value: TransactionFilters[K]) => void
+
+interface FiltersCardProps {
+    filters: filters
+    updateFilter: updateFilter
+}
+
+export function FiltersCard({ filters, updateFilter, categories, resetFilters }: FiltersContainerProps) {
+
+
     return (
         <div className="bg-white rounded-2xl shadow-md p-6 mb-6">
             <h3 className="text-sm sm:text-xl font-semibold text-slate-700 mb-4 uppercase tracking-wide">filters</h3>
             <div className="flex flex-col md:grid md:grid-cols-5 gap-4 justify-center items-center">
 
                 {/* Years */}
-                <div className="w-full">
-                    <label htmlFor='years' className="block text-sm font-medium text-slate-700 mb-2">Years</label>
-                    <select id="years" name="years" value={filters.year || ''} onChange={e => updateFilter('year', e.target.value)} className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-slate-50 hover:bg-white cursor-pointer">
-                        <option value="">All years</option>
-                        {allYears.map((item) => (
-                            <option value={item} key={item}>{item}</option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="w-full">
-                    <label htmlFor='month' className="block text-sm font-medium text-slate-700 mb-2">Month</label>
-                    <select id="month" name="month" value={filters.month || ''} onChange={e => updateFilter('month', e.target.value)} className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-slate-50 hover:bg-white cursor-pointer">
-                        <option value="">All months</option>
-                        <option value="1">January</option>
-                        <option value="2">February</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
-
-                    </select>
-                </div>
+                <FilterByYear filters={filters} updateFilter={updateFilter}></FilterByYear>
+                <FilterByMonth filters={filters} updateFilter={updateFilter}></FilterByMonth>
 
                 <div className="w-full">
                     <label htmlFor='categories' className="block text-sm font-medium text-slate-700 mb-2">Categories</label>
@@ -74,6 +58,62 @@ export default function FiltersCard({ allYears, filters, updateFilter, categorie
                     Clean filters
                 </button>
             </div>
+        </div>
+    )
+}
+
+export function FilterByYear({ filters, updateFilter }: FiltersCardProps) {
+    const [allYears, setAllYears] = useState<number[]>([])
+
+    async function loadYears() {
+        try {
+            const y = await getYears()
+            setAllYears(y)
+        } catch (err) {
+            console.error('Error loading years:', err)
+        }
+    }
+
+    useEffect(() => {
+        loadYears()
+    }, [])
+
+
+    useEffect(() => {
+        console.log(filters)
+    }, [filters])
+    return (
+        <div className="w-full">
+            <label htmlFor='years' className="block text-sm font-medium text-slate-700 mb-2">Years</label>
+            <select id="years" name="years" value={filters.year || ''} onChange={e => updateFilter('year', e.target.value)} className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-slate-50 hover:bg-white cursor-pointer">
+                <option value="">All years</option>
+                {allYears.map((item) => (
+                    <option value={item} key={item}>{item}</option>
+                ))}
+            </select>
+        </div>
+    )
+}
+
+export function FilterByMonth({ filters, updateFilter }: FiltersCardProps) {
+    return (
+        <div className="w-full">
+            <label htmlFor='month' className="block text-sm font-medium text-slate-700 mb-2">Month</label>
+            <select id="month" name="month" value={filters.month || ''} onChange={e => updateFilter('month', e.target.value)} className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-slate-50 hover:bg-white cursor-pointer">
+                <option value="">All months</option>
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
         </div>
     )
 }

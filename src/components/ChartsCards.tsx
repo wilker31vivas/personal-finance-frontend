@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import ChartCard from './ChartCard'
-import type { DataOptions, CategoriesFilters, TransactionFilters } from '../types/types'
+import type { DataOptions, CategoriesFilters } from '../types/types'
 import { getOptionCategories, getOptionExpensesAndIncome, getOptionTopFiveCategories } from '../utils/optionsCharts'
 import { getTopCategories, getAllCategories, getTransactions } from '../api/transactions'
 import { FilterByYear, FilterByMonth } from './FiltersCard'
@@ -41,9 +41,9 @@ export default function ChartsCards() {
 
     const chartHeight = isMobile ? 300 : isTablet ? 350 : 400;
 
-    const updateFilter = <K extends keyof TransactionFilters>(
+    const updateFilter = <K extends keyof CategoriesFilters>(
         key: K,
-        value: TransactionFilters[K]
+        value: CategoriesFilters[K]
     ) => {
         const newFilters = { ...filters, [key]: value || "" }
         setFilters(prevFilters => {
@@ -99,6 +99,7 @@ export default function ChartsCards() {
     ];
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+            <FilterByMonth filters={filters} updateFilter={updateFilter}></FilterByMonth>
             <FilterByYear filters={filters} updateFilter={updateFilter}></FilterByYear>
             <ChartCard getOption={getOptionTopFiveCategories(topCategories, isMobile, isTablet)} chartHeight={chartHeight} />
             <ChartCard getOption={getOptionCategories(allCategories)} chartHeight={chartHeight} />

@@ -1,4 +1,4 @@
-import type { TransactionFilters } from "../types/types"
+import type { CategoriesFilters } from "../types/types"
 import { getYears } from '../api/transactions'
 import { useEffect, useState } from "react"
 
@@ -10,8 +10,8 @@ interface FiltersContainerProps {
     resetFilters: () => void
 }
 
-type filters = TransactionFilters
-type updateFilter = <K extends keyof TransactionFilters>(key: K, value: TransactionFilters[K]) => void
+type filters = CategoriesFilters
+type updateFilter = <K extends keyof CategoriesFilters>(key: K, value: CategoriesFilters[K]) => void
 
 interface FiltersCardProps {
     filters: filters

@@ -6,7 +6,7 @@ export default function Header() {
 
       <div className="absolute top-0 right-0 w-96 h-96 bg-blue-marguerite-400 rounded-full opacity-10 blur-3xl -translate-y-1/2 translate-x-1/2"></div>
       <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-marguerite-800 rounded-full opacity-10 blur-3xl translate-y-1/2 -translate-x-1/2"></div>
-      
+
       <div className="relative flex items-center justify-between">
 
         <div className="flex-1">
@@ -27,7 +27,7 @@ export default function Header() {
               Administrator
             </p>
           </div>
-          
+
           <div className="relative">
             <img
               src={logo}

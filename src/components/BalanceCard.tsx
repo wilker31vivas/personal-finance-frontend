@@ -22,8 +22,6 @@ export default function BalanceCard() {
     const { current } = balanceData.transactionsAmount
     const { income, expense, balance } = current
 
-
-
     async function fetchBalance() {
         try {
             setIsLoading(true)

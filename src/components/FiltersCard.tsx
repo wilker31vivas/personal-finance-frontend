@@ -1,7 +1,6 @@
-import type { CategoriesFilters } from "../types/types"
+import type { DashboardFilters } from "../types/types"
 import { getYears } from '../api/transactions'
 import { useEffect, useState } from "react"
-
 
 interface FiltersContainerProps {
     filters: filters
@@ -10,8 +9,8 @@ interface FiltersContainerProps {
     resetFilters: () => void
 }
 
-type filters = CategoriesFilters
-type updateFilter = <K extends keyof CategoriesFilters>(key: K, value: CategoriesFilters[K]) => void
+type filters = DashboardFilters
+type updateFilter = <K extends keyof DashboardFilters>(key: K, value: DashboardFilters[K]) => void
 
 interface FiltersCardProps {
     filters: filters
@@ -19,7 +18,6 @@ interface FiltersCardProps {
 }
 
 export function FiltersCard({ filters, updateFilter, categories, resetFilters }: FiltersContainerProps) {
-
 
     return (
         <div className="bg-white rounded-2xl shadow-md p-6 mb-6">
@@ -78,10 +76,6 @@ export function FilterByYear({ filters, updateFilter }: FiltersCardProps) {
         loadYears()
     }, [])
 
-
-    useEffect(() => {
-        console.log(filters)
-    }, [filters])
     return (
         <div className="w-full">
             <label htmlFor='years' className="block text-sm font-medium text-slate-700 mb-2">Years</label>

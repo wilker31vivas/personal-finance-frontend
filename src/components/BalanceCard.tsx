@@ -1,58 +1,19 @@
 import { useEffect, useState } from "react";
 import { getBalance } from '../api/transactions'
-import type { Balance } from "../types/types";
+import type { Balance, DashboardFilters } from "../types/types";
 import { formatCurrency } from '../utils/formatCurrency'
 import ErrorMessage from './ErrorMessage'
 import Loader from "./Loader";
 
-const INITIAL_BALANCE: Balance = {
-    transactionsAmount: {
-        current: { income: null, expense: null, balance: null },
-        previous: { income: null, expense: null, balance: null }
-    },
-    change: { income: null, expense: null }
-}
-
-
-
-export default function BalanceCard() {
-    const [balanceData, setBalanceData] = useState(INITIAL_BALANCE)
-    const [isLoading, setIsLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+export default function BalanceCard({ balanceData }: { balanceData: Balance }) {
     const { current } = balanceData.transactionsAmount
     const { income, expense, balance } = current
-
-    async function fetchBalance() {
-        try {
-            setIsLoading(true)
-            setError(null)
-            const balance = await getBalance()
-            setBalanceData(balance)
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Error loading balance")
-        } finally {
-            setIsLoading(false)
-        }
-    }
-
-    useEffect(() => {
-        fetchBalance()
-    }, [])
-
-    if (isLoading) {
-        return <Loader description="Loading balance..."></Loader>
-    }
-
-    if (error) {
-        return <ErrorMessage title={error} onRetry={fetchBalance} />;
-    }
-
 
     return (
         <div className="flex flex-col sm:flex-row justify-evenly gap-4 text-start">
             <StatCard title="Total incomes" amount={income} change={balanceData.change.income} bgColor="bg-sucess" titleColor="text-surface"></StatCard>
             <StatCard title="Total expenses" amount={expense} change={balanceData.change.expense} bgColor="bg-danger" titleColor="text-surface"></StatCard>
-            <StatCard title="Balance" amount={balance} change={null} bgColor="bg-white" textColor={balance !== null && balance >= 0 ? 'text-sucess' : 'text-danger'}></StatCard>
+            <StatCard title="Balance" amount={balance} change={balanceData.change.balance} bgColor="bg-white" textColor={balance !== null && balance >= 0 ? 'text-sucess' : 'text-danger'}></StatCard>
         </div>
     )
 }

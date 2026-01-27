@@ -16,6 +16,7 @@ export interface Balance {
     change: {
         income: NumberOrNull,
         expense: NumberOrNull
+        balance: NumberOrNull
     }
 }
 
@@ -45,7 +46,7 @@ export interface DataOptions {
   name: string
 }
 
-export type CategoriesFilters = {
+export type DashboardFilters = {
     month?: string,
     year?: string,
 }

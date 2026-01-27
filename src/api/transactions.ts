@@ -13,8 +13,9 @@ export async function getTransactions(filters = {}): Promise<Transaction[]> {
   return res.json();
 }
 
-export async function getBalance(): Promise<Balance> {
-  const res = await fetch(`${API_URL}/stats/monthly`);
+export async function getBalance(filters = {}): Promise<Balance> {
+  const params = new URLSearchParams(filters);
+  const res = await fetch(`${API_URL}/stats/monthly?${params}`);
   if (!res.ok) throw new Error("Error loading balance");
   return res.json();
 }

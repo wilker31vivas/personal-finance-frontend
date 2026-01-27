@@ -2,8 +2,8 @@ import BalanceCard from '../components/BalanceCard';
 import Header from '../components/Header'
 import ChartsCards from '../components/ChartsCards'
 import { useState, useEffect } from 'react';
-import type { DataOptions, CategoriesFilters } from '../types/types'
-import { getTopCategories, getAllCategories, getTransactions } from '../api/transactions'
+import type { DataOptions, DashboardFilters, Balance } from '../types/types'
+import { getTopCategories, getAllCategories, getTransactions, getBalance } from '../api/transactions'
 import { FilterByYear, FilterByMonth } from '../components/FiltersCard'
 
 function useWindowSize() {
@@ -27,33 +27,41 @@ function useWindowSize() {
     return size;
 }
 
-export const INITIAL_FILTERS = { month: "", year: "" }
+export const INITIAL_FILTERS: DashboardFilters = { month: "1", year: "2026" }
 
 const INITIAL_VALUE: DataOptions[] = [{ name: "", value: 0 }]
+
+const INITIAL_BALANCE: Balance = {
+    transactionsAmount: {
+        current: { income: null, expense: null, balance: null },
+        previous: { income: null, expense: null, balance: null }
+    },
+    change: { income: null, expense: null, balance: null }
+}
 
 export default function Dashboard() {
     const { width } = useWindowSize();
     const [topCategories, setTopCategories] = useState<DataOptions[]>(INITIAL_VALUE)
     const [allCategories, setAllCategories] = useState<DataOptions[]>(INITIAL_VALUE)
-    const [filters, setFilters] = useState(INITIAL_FILTERS)
+    const [balanceData, setBalanceData] = useState(INITIAL_BALANCE)
+    const [filters, setFilters] = useState<DashboardFilters>(INITIAL_FILTERS)
 
     const isMobile = width < 640;
     const isTablet = width >= 640 && width < 1024;
 
     const chartHeight = isMobile ? 300 : isTablet ? 350 : 400;
 
-    const updateFilter = <K extends keyof CategoriesFilters>(
+    const updateFilter = <K extends keyof DashboardFilters>(
         key: K,
-        value: CategoriesFilters[K]
+        value: DashboardFilters[K]
     ) => {
-        const newFilters = { ...filters, [key]: value || "" }
-        setFilters(prevFilters => {
-            const newFilters = { ...prevFilters, [key]: value || "" }
-            return newFilters
-        })
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            [key]: value || ""
+        }))
     }
 
-    async function fetchTopCategories(filters: CategoriesFilters) {
+    async function fetchTopCategories(filters: DashboardFilters) {
         // setLoading(true)
         // setError(null)
         try {
@@ -68,7 +76,7 @@ export default function Dashboard() {
         }
     }
 
-    async function fetchAllCategories(filters: CategoriesFilters) {
+    async function fetchAllCategories(filters: DashboardFilters) {
         // setLoading(true)
         // setError(null)
         try {
@@ -83,9 +91,23 @@ export default function Dashboard() {
         }
     }
 
+    async function fetchBalance(filters: DashboardFilters) {
+        try {
+            // setIsLoading(true)
+            // setError(null)
+            const balance = await getBalance(filters)
+            setBalanceData(balance)
+        } catch (err) {
+            // setError(err instanceof Error ? err.message : "Error loading balance")
+        } finally {
+            // setIsLoading(false)
+        }
+    }
+
     useEffect(() => {
         fetchTopCategories(filters)
         fetchAllCategories(filters)
+        fetchBalance(filters)
     }, [filters])
 
     const dataThree = [
@@ -99,17 +121,35 @@ export default function Dashboard() {
     ];
 
     return (
-        <div>
-            <Header></Header>
-            <div>
-                <h1 className='text-2xl font-bold'>Dashboard</h1>
-                <div className='flex gap-2.5'>
-                    <FilterByMonth filters={filters} updateFilter={updateFilter}></FilterByMonth>
-                    <FilterByYear filters={filters} updateFilter={updateFilter}></FilterByYear>
+        <div className="min-h-screen">
+            <Header />
+            <div className="mx-auto grid grid-cols-1 gap-4 sm:gap-6 mt-6">
+                {/* Header Section */}
+                <div className="flex flex-col sm:justify-between sm:items-center sm:flex-wrap">
+                    <h1 className="text-3xl sm:text-4xl font-bold text-text mb-4 text-center sm:text-right">
+                        Dashboard
+                    </h1>
+                    <div className="flex gap-3 text-center sm:text-right">
+                        <FilterByMonth
+                            filters={filters}
+                            updateFilter={updateFilter}
+                        />
+                        <FilterByYear
+                            filters={filters}
+                            updateFilter={updateFilter}
+                        />
+                    </div>
                 </div>
+                <BalanceCard balanceData={balanceData} />
+                <ChartsCards
+                    topCategories={topCategories}
+                    isMobile={isMobile}
+                    isTablet={isTablet}
+                    allCategories={allCategories}
+                    dataThree={dataThree}
+                    chartHeight={chartHeight}
+                />
             </div>
-            <BalanceCard></BalanceCard>
-            <ChartsCards topCategories={topCategories} isMobile={isMobile} isTablet={isTablet} allCategories={allCategories} dataThree={dataThree} chartHeight={chartHeight}></ChartsCards>
         </div>
     )
 }

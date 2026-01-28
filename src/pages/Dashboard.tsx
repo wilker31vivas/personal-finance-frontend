@@ -125,10 +125,15 @@ export default function Dashboard() {
             <Header />
             <div className="mx-auto grid grid-cols-1 gap-4 sm:gap-6 mt-6">
                 {/* Header Section */}
-                <div className="flex flex-col sm:justify-between sm:items-center sm:flex-wrap">
-                    <h1 className="text-3xl sm:text-4xl font-bold text-text mb-4 text-center sm:text-right">
-                        Dashboard
-                    </h1>
+                <div className="flex flex-col text-center sm:flex-row sm:justify-between sm:items-center gap-3">
+                    <div>
+                        <h1 className="text-3xl sm:text-4xl font-bold text-text bg-gradient-to-r from-blue-marguerite-600 to-purple-600 bg-clip-text text-transparent">
+                            Dashboard
+                        </h1>
+                        <p className="text-sm text-text-muted mt-1">
+                            Overview of your financial data
+                        </p>
+                    </div>
                     <div className="flex gap-3 text-center sm:text-right">
                         <FilterByMonth
                             filters={filters}

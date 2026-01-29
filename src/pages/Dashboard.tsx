@@ -100,7 +100,9 @@ export default function Dashboard() {
 
                 <FilterSection filters={filters} updateFilter={updateFilter} />
 
-                {loading ? (
+                {error ? (
+                    <ErrorMessage title={error} onRetry={fetchDashboardData} />
+                ) : loading ? (
                     <Loader description="Loading dashboard..." />
                 ) : hasNoData ? (
                     <EmptyStateDemo onReset={() => setFilters(INITIAL_FILTERS)} />

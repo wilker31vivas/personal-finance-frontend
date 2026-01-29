@@ -3,7 +3,7 @@ import type {DataOptions} from '../types/types'
 export const getOptionCategories = (data: DataOptions[]) => {
   const baseOption = {
     title: {
-      text: "Categories",
+      text: "Category Distribution",
     },
     tooltip: {
       trigger: "axis",
@@ -35,7 +35,7 @@ export const getOptionCategories = (data: DataOptions[]) => {
 export const getOptionExpensesAndIncome = (data: DataOptions[]) => {
   const baseOption = {
     title: {
-      text: "Expenses and income by Month",
+      text: "Income vs. Expenses",
     },
     xAxis: {
       type: "category",
@@ -63,7 +63,7 @@ export const getOptionTopFiveCategories = (data: DataOptions[], isMobile: boolea
     color: ["#667EEA", "#A0D995", "#F6C456", "#F76C6C", "#64CFF6"],
 
     title: {
-      text: "Top 5 categories",
+      text: "Top 5 Categories",
       left: "center",
       top: isMobile ? 10 : 20,
       textStyle: {
@@ -97,11 +97,7 @@ export const getOptionTopFiveCategories = (data: DataOptions[], isMobile: boolea
         fontSize: isMobile ? 12 : 14,
         color: "#333",
       },
-      padding: isMobile ? 5 : 10,
-      backgroundColor: "rgba(255, 255, 255, 0.9)",
-      borderRadius: 5,
-      borderColor: "#ddd",
-      borderWidth: 1,
+      padding: isMobile ? 15 : 20,
     },
 
     series: [

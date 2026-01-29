@@ -2,14 +2,11 @@ import logo from '../img/john-doe.jpg'
 
 export default function Header() {
   return (
-    <header className="relative px-4 py-2 sm:px-4 sm:py-3 bg-gradient-to-br from-blue-marguerite-600 via-blue-marguerite-500 to-blue-marguerite-700 shadow-lg overflow-hidden">
+    <header className="relative px-4 py-2 sm:px-8 sm:py-4 bg-gradient-to-br from-blue-marguerite-600 via-blue-marguerite-500 to-blue-marguerite-700 shadow-lg overflow-hidden">
 
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-marguerite-400 rounded-full opacity-10 blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-      <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-marguerite-800 rounded-full opacity-10 blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+      <div className="flex items-center justify-between">
 
-      <div className="relative flex items-center justify-between">
-
-        <div className="flex-1">
+        <div>
           <h1 className="text-xl sm:text-2xl font-bold text-white drop-shadow-sm">
             Welcome back,
           </h1>

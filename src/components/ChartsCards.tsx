@@ -1,10 +1,9 @@
 import ChartCard from './ChartCard'
 import { getOptionCategories, getOptionExpensesAndIncome, getOptionTopFiveCategories } from '../utils/optionsCharts'
-import { useContext } from 'react'
-import { DashboardContext } from '../context/DashboardContext'
+import { useDashboard } from '../context/DashboardContext'
 
 export default function ChartsCards() {
-    const {topCategories, isMobile, isTablet, allCategories, chartHeight } = useContext(DashboardContext)
+    const { topCategories, isMobile, isTablet, allCategories, chartHeight } = useDashboard()
 
     const dataThree = [
         { value: 250, name: 'Mon' },
@@ -17,10 +16,13 @@ export default function ChartsCards() {
     ];
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div className="space-y-6">
             <ChartCard getOption={getOptionTopFiveCategories(topCategories, isMobile, isTablet)} chartHeight={chartHeight} />
-            <ChartCard getOption={getOptionCategories(allCategories)} chartHeight={chartHeight} />
-            <ChartCard getOption={getOptionExpensesAndIncome(dataThree)} chartHeight={chartHeight} />
+
+            <div className='grid md:grid-cols-2 gap-6'>
+                <ChartCard getOption={getOptionCategories(allCategories)} chartHeight={chartHeight}/>
+                <ChartCard getOption={getOptionExpensesAndIncome(dataThree)} chartHeight={chartHeight}/>
+            </div>
         </div>
     )
 }

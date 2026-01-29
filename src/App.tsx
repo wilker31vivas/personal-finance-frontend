@@ -3,7 +3,7 @@ import { DashboardContextProvider } from "./context/DashboardContext"
 
 function App() {
   return (
-    <div className='flex flex-col bg-body p-6 gap-4'>
+    <div className='flex flex-col bg-body'>
       <DashboardContextProvider>
         <Dashboard></Dashboard>
       </DashboardContextProvider>

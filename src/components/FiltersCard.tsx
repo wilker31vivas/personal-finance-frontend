@@ -79,7 +79,7 @@ export function FilterByYear({ filters, updateFilter }: FiltersCardProps) {
     return (
         <div className="w-full flex flex-col gap-2">
             <label
-                className="text-sm font-semibold text-text items-center gap-2"
+                className="text-sm font-semibold items-center gap-2"
             >
                 Year
             </label>
@@ -133,7 +133,7 @@ export function FilterByMonth({ filters, updateFilter }: FiltersCardProps) {
         <div className="w-full flex flex-col gap-2">
             <label
                 htmlFor="month"
-                className="text-sm font-semibold text-text items-center gap-2"
+                className="text-sm font-semibold items-center gap-2"
             >
                 Month
             </label>

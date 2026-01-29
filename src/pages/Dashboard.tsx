@@ -5,10 +5,16 @@ import { FilterByYear, FilterByMonth } from '../components/FiltersCard'
 import { useDashboard, INITIAL_FILTERS } from '../context/DashboardContext';
 import ErrorMessage from '../components/ErrorMessage'
 import Loader from '../components/Loader';
+import type { DashboardFilters } from '../types/types';
 
 type EmptyStateProps = {
     onReset: () => void;
 };
+
+type FilterSectionProps = {
+    filters: DashboardFilters
+    updateFilter: <K extends keyof DashboardFilters>(key: K, value: DashboardFilters[K]) => void
+}
 
 function EmptyState({ onReset }: EmptyStateProps) {
     return (
@@ -41,14 +47,41 @@ function EmptyState({ onReset }: EmptyStateProps) {
     );
 }
 
-export function EmptyStateDemo({ onReset }: EmptyStateProps) {
+function EmptyStateDemo({ onReset }: EmptyStateProps) {
     return (
-        <div className="bg-surface p-8">
+        <div className="p-6 group relative rounded-3xl transition-all duration-300
+                bg-gradient-to-br from-white to-slate-50/60
+                hover:shadow-2xl hover:-translate-y-1">
             <div className="max-w-3xl mx-auto">
                 <EmptyState onReset={onReset} />
             </div>
         </div>
     );
+}
+
+function FilterSection({ filters, updateFilter }: FilterSectionProps) {
+    return (
+        <div className="flex flex-col text-center sm:flex-row sm:justify-between sm:items-center">
+            <div>
+                <h1 className="text-3xl sm:text-4xl font-bold text-text bg-gradient-to-r from-blue-marguerite-600 to-purple-600 bg-clip-text text-transparent">
+                    Dashboard
+                </h1>
+                <p className="text-sm text-text-muted mt-1">
+                    Overview of your financial data
+                </p>
+            </div>
+            <div className="flex gap-3 text-center sm:text-left text-text-muted">
+                <FilterByMonth
+                    filters={filters}
+                    updateFilter={updateFilter}
+                />
+                <FilterByYear
+                    filters={filters}
+                    updateFilter={updateFilter}
+                />
+            </div>
+        </div>
+    )
 }
 
 export default function Dashboard() {
@@ -63,31 +96,11 @@ export default function Dashboard() {
     return (
         <main className="min-h-screen" role="main">
             <Header />
-            <div className="mx-auto grid grid-cols-1 gap-4 sm:gap-6 mt-6" aria-label="Dashboard content">
-                {/* Header Section */}
-                <div className="flex flex-col text-center sm:flex-row sm:justify-between sm:items-center gap-3">
-                    <div>
-                        <h1 className="text-3xl sm:text-4xl font-bold text-text bg-gradient-to-r from-blue-marguerite-600 to-purple-600 bg-clip-text text-transparent">
-                            Dashboard
-                        </h1>
-                        <p className="text-sm text-text-muted mt-1">
-                            Overview of your financial data
-                        </p>
-                    </div>
-                    <div className="flex gap-3 text-center sm:text-right">
-                        <FilterByMonth
-                            filters={filters}
-                            updateFilter={updateFilter}
-                        />
-                        <FilterByYear
-                            filters={filters}
-                            updateFilter={updateFilter}
-                        />
-                    </div>
-                </div>
-                {error ? (
-                    <ErrorMessage title={error} onRetry={fetchDashboardData} />
-                ) : loading ? (
+            <div className="mx-auto flex flex-col max-w-7xl px-6 py-4 gap-6  " aria-label="Dashboard content">
+
+                <FilterSection filters={filters} updateFilter={updateFilter} />
+
+                {loading ? (
                     <Loader description="Loading dashboard..." />
                 ) : hasNoData ? (
                     <EmptyStateDemo onReset={() => setFilters(INITIAL_FILTERS)} />

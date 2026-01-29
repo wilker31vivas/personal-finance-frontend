@@ -1,129 +1,69 @@
 import BalanceCard from '../components/BalanceCard';
 import Header from '../components/Header'
 import ChartsCards from '../components/ChartsCards'
-import { useState, useEffect } from 'react';
-import type { DataOptions, DashboardFilters, Balance } from '../types/types'
-import { getTopCategories, getAllCategories, getTransactions, getBalance } from '../api/transactions'
 import { FilterByYear, FilterByMonth } from '../components/FiltersCard'
+import { useDashboard, INITIAL_FILTERS } from '../context/DashboardContext';
+import ErrorMessage from '../components/ErrorMessage'
+import Loader from '../components/Loader';
 
-function useWindowSize() {
-    const [size, setSize] = useState({
-        width: window.innerWidth,
-        height: window.innerHeight
-    });
+type EmptyStateProps = {
+    onReset: () => void;
+};
 
-    useEffect(() => {
-        const handleResize = () => {
-            setSize({
-                width: window.innerWidth,
-                height: window.innerHeight
-            });
-        };
+function EmptyState({ onReset }: EmptyStateProps) {
+    return (
+        <div className="relative overflow-hidden bg-gradient-to-br from-white to-blue-marguerite-50 border-2 border-dashed border-blue-marguerite-200 rounded-3xl shadow-lg">
 
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-marguerite-200 rounded-full opacity-20 blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-200 rounded-full opacity-20 blur-2xl translate-y-1/2 -translate-x-1/2"></div>
 
-    return size;
+            <div className="relative px-8 py-12 text-center">
+
+                <h2 className="text-2xl sm:text-3xl font-bold text-text mb-3">
+                    No Data Available
+                </h2>
+                <p className="text-base text-text-muted max-w-md mx-auto leading-relaxed mb-8">
+                    We couldn't find any transactions for this period. Try selecting a different month or year to view your financial data.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <button
+                        onClick={onReset}
+                        className="cursor-pointer group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-marguerite-500 to-blue-marguerite-600 hover:from-blue-marguerite-600 hover:to-blue-marguerite-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95"
+                    >
+                        <span>View Current Month</span>
+                    </button>
+                </div>
+            </div>
+
+            <div className="h-1.5 bg-gradient-to-r from-blue-marguerite-400 via-purple-500 to-blue-marguerite-600"></div>
+        </div>
+    );
 }
 
-export const INITIAL_FILTERS: DashboardFilters = { month: "1", year: "2026" }
-
-const INITIAL_VALUE: DataOptions[] = [{ name: "", value: 0 }]
-
-const INITIAL_BALANCE: Balance = {
-    transactionsAmount: {
-        current: { income: null, expense: null, balance: null },
-        previous: { income: null, expense: null, balance: null }
-    },
-    change: { income: null, expense: null, balance: null }
+export function EmptyStateDemo({ onReset }: EmptyStateProps) {
+    return (
+        <div className="bg-surface p-8">
+            <div className="max-w-3xl mx-auto">
+                <EmptyState onReset={onReset} />
+            </div>
+        </div>
+    );
 }
 
 export default function Dashboard() {
-    const { width } = useWindowSize();
-    const [topCategories, setTopCategories] = useState<DataOptions[]>(INITIAL_VALUE)
-    const [allCategories, setAllCategories] = useState<DataOptions[]>(INITIAL_VALUE)
-    const [balanceData, setBalanceData] = useState(INITIAL_BALANCE)
-    const [filters, setFilters] = useState<DashboardFilters>(INITIAL_FILTERS)
+    const { filters, setFilters, updateFilter, error, loading, fetchDashboardData, topCategories, allCategories, balanceData } = useDashboard()
 
-    const isMobile = width < 640;
-    const isTablet = width >= 640 && width < 1024;
-
-    const chartHeight = isMobile ? 300 : isTablet ? 350 : 400;
-
-    const updateFilter = <K extends keyof DashboardFilters>(
-        key: K,
-        value: DashboardFilters[K]
-    ) => {
-        setFilters(prevFilters => ({
-            ...prevFilters,
-            [key]: value || ""
-        }))
-    }
-
-    async function fetchTopCategories(filters: DashboardFilters) {
-        // setLoading(true)
-        // setError(null)
-        try {
-            const c = await getTopCategories(filters)
-            setTopCategories(c)
-        } catch (err) {
-            console.error(err)
-            // setError(err instanceof Error ? err.message : 'Error loading transactions')
-        }
-        finally {
-            ;// setLoading(false)
-        }
-    }
-
-    async function fetchAllCategories(filters: DashboardFilters) {
-        // setLoading(true)
-        // setError(null)
-        try {
-            const c = await getAllCategories(filters)
-            setAllCategories(c)
-        } catch (err) {
-            console.error(err)
-            // setError(err instanceof Error ? err.message : 'Error loading transactions')
-        }
-        finally {
-            ;// setLoading(false)
-        }
-    }
-
-    async function fetchBalance(filters: DashboardFilters) {
-        try {
-            // setIsLoading(true)
-            // setError(null)
-            const balance = await getBalance(filters)
-            setBalanceData(balance)
-        } catch (err) {
-            // setError(err instanceof Error ? err.message : "Error loading balance")
-        } finally {
-            // setIsLoading(false)
-        }
-    }
-
-    useEffect(() => {
-        fetchTopCategories(filters)
-        fetchAllCategories(filters)
-        fetchBalance(filters)
-    }, [filters])
-
-    const dataThree = [
-        { value: 250, name: 'Mon' },
-        { value: 300, name: 'Tue' },
-        { value: -200, name: 'Wed' },
-        { value: 400, name: 'Thu' },
-        { value: -300, name: 'Fri' },
-        { value: 300, name: 'Sat' },
-        { value: 300, name: 'Sun' }
-    ];
+    const hasNoData = !loading && !error && (
+        topCategories.length === 0 &&
+        allCategories.length === 0 &&
+        balanceData?.transactionsAmount?.current?.balance === null
+    );
 
     return (
-        <div className="min-h-screen">
+        <main className="min-h-screen" role="main">
             <Header />
-            <div className="mx-auto grid grid-cols-1 gap-4 sm:gap-6 mt-6">
+            <div className="mx-auto grid grid-cols-1 gap-4 sm:gap-6 mt-6" aria-label="Dashboard content">
                 {/* Header Section */}
                 <div className="flex flex-col text-center sm:flex-row sm:justify-between sm:items-center gap-3">
                     <div>
@@ -145,16 +85,21 @@ export default function Dashboard() {
                         />
                     </div>
                 </div>
-                <BalanceCard balanceData={balanceData} />
-                <ChartsCards
-                    topCategories={topCategories}
-                    isMobile={isMobile}
-                    isTablet={isTablet}
-                    allCategories={allCategories}
-                    dataThree={dataThree}
-                    chartHeight={chartHeight}
-                />
+                {error ? (
+                    <ErrorMessage title={error} onRetry={fetchDashboardData} />
+                ) : loading ? (
+                    <Loader description="Loading dashboard..." />
+                ) : hasNoData ? (
+                    <EmptyStateDemo onReset={() => setFilters(INITIAL_FILTERS)} />
+                ) : (
+                    <>
+                        <BalanceCard />
+                        <ChartsCards />
+                    </>
+                )}
             </div>
-        </div>
+        </main>
     )
 }
+
+

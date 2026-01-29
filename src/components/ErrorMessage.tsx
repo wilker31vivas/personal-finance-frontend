@@ -1,4 +1,10 @@
-export default function ErrorMessage({ title, description = "Server connection error", showRetryButton = true, onRetry, }) {
+type ErrorProps = {
+  title: string
+  description?: string
+  onRetry(): Promise<void>
+}
+
+export default function ErrorMessage({ title, description = "Server connection error", onRetry }: ErrorProps) {
    return (
       <div className="flex sm:flex-row sm:justify-between flex-col items-center gap-4 rounded-lg border border-red-200 bg-red-50 px-6 py-4">
         <div className="flex items-center justify-center gap-3">

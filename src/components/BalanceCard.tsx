@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { getBalance } from '../api/transactions'
 import type { Balance, DashboardFilters } from "../types/types";
 import { formatCurrency } from '../utils/formatCurrency'
-import ErrorMessage from './ErrorMessage'
-import Loader from "./Loader";
+import { DashboardContext } from '../context/DashboardContext';
 
-export default function BalanceCard({ balanceData }: { balanceData: Balance }) {
+
+export default function BalanceCard() {
+    const { balanceData } = useContext(DashboardContext)
+
     const { current } = balanceData.transactionsAmount
     const { income, expense, balance } = current
 

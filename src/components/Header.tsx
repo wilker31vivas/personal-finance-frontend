@@ -14,7 +14,7 @@ export default function Header() {
             Welcome back,
           </h1>
           <p className="text-lg sm:text-xl font-semibold text-blue-marguerite-100 mt-1">
-            John
+            Wilker
           </p>
         </div>
 

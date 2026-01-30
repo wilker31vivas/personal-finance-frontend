@@ -42,8 +42,8 @@ export interface TransactionFilters {
 }
 
 export interface DataOptions {
-  value: number,
-  name: string
+    value: number,
+    name: string
 }
 
 export type DashboardFilters = {

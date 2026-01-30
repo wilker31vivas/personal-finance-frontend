@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import type { DataOptions, DashboardFilters, Balance } from '../types/types'
-import { getTopCategories, getAllCategories, getBalance } from '../api/transactions'
+import type { DataOptions, DashboardFilters, Balance, Transaction } from '../types/types'
+import { getTopCategories, getAllCategories, getBalance, getTransactions } from '../api/transactions'
 
 type DashboardContextType = {
     filters: DashboardFilters
@@ -18,6 +18,7 @@ type DashboardContextType = {
     error: string | null
     fetchDashboardData(): Promise<void>
     setFilters: React.Dispatch<React.SetStateAction<DashboardFilters>>
+    transactions: DataOptions[]
 }
 
 export const DashboardContext = createContext<DashboardContextType | null>(null)
@@ -64,6 +65,11 @@ export function DashboardContextProvider({ children }: { children: React.ReactNo
     const [topCategories, setTopCategories] = useState<DataOptions[]>(INITIAL_CATEGORIES)
     const [allCategories, setAllCategories] = useState<DataOptions[]>(INITIAL_CATEGORIES)
     const [balanceData, setBalanceData] = useState<Balance>(INITIAL_BALANCE)
+    const [transactions, setTransactions] = useState<DataOptions[]>([])
+
+    // const [trans, setTrans] = useState<Transaction[]>([])
+
+
     const [filters, setFilters] = useState<DashboardFilters>(INITIAL_FILTERS)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -84,21 +90,37 @@ export function DashboardContextProvider({ children }: { children: React.ReactNo
         }))
     }
 
+    function incomeAndExpenses(arr: Transaction[]) {
+
+        return arr.map(item => {
+            const date = new Date(item.date)
+            return {
+                name: filters.month === ''
+                    ? `${date.getMonth() + 1}`
+                    : `${date.getDate()}`,
+                value: item.type == "expense" ? -item.amount : item.amount
+            }
+        })
+    }
+
+
     async function fetchDashboardData() {
         setLoading(true);
         setError(null);
 
         try {
-            const [top, all, balance] = await Promise.all([
+            const [top, all, balance, transactions] = await Promise.all([
                 getTopCategories(filters),
                 getAllCategories(filters),
-                getBalance(filters)
+                getBalance(filters),
+                getTransactions(filters)
             ]);
 
             if (!cancelled) {
                 setTopCategories(top);
                 setAllCategories(all);
                 setBalanceData(balance);
+                setTransactions(incomeAndExpenses(transactions))
             }
         } catch (err) {
             if (!cancelled) {
@@ -117,13 +139,16 @@ export function DashboardContextProvider({ children }: { children: React.ReactNo
 
         return () => {
             setCancelled(true);
-
         };
     }, [filters]);
 
+    // useEffect(() => {
+    //     console.log(incomeAndExpenses(trans))
+    // }, [trans])
+
 
     return (
-        <DashboardContext.Provider value={{ filters, setFilters, updateFilter, balanceData, topCategories, isMobile, isTablet, allCategories, chartHeight, error, loading, fetchDashboardData }}>
+        <DashboardContext.Provider value={{ filters, setFilters, updateFilter, balanceData, topCategories, isMobile, isTablet, allCategories, chartHeight, error, loading, fetchDashboardData, transactions }}>
             {children}
         </DashboardContext.Provider>
     )

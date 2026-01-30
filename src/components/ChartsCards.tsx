@@ -1,9 +1,9 @@
-import ChartCard from './ChartCard'
 import { getOptionCategories, getOptionExpensesAndIncome, getOptionTopFiveCategories } from '../utils/optionsCharts'
 import { useDashboard } from '../context/DashboardContext'
+import ReactECharts from 'echarts-for-react'
 
 export default function ChartsCards() {
-    const { topCategories, isMobile, isTablet, allCategories, chartHeight } = useDashboard()
+    const { topCategories, isMobile, isTablet, allCategories, chartHeight, transactions } = useDashboard()
 
     const dataThree = [
         { value: 250, name: 'Mon' },
@@ -21,7 +21,37 @@ export default function ChartsCards() {
 
             <div className='grid md:grid-cols-2 gap-6'>
                 <ChartCard getOption={getOptionCategories(allCategories)} chartHeight={chartHeight}/>
-                <ChartCard getOption={getOptionExpensesAndIncome(dataThree)} chartHeight={chartHeight}/>
+                <ChartCard getOption={getOptionExpensesAndIncome(transactions)} chartHeight={chartHeight}/>
+            </div>
+        </div>
+    )
+}
+
+export function ChartCard({ getOption, chartHeight}) {
+    return (
+        <div
+            className={`
+                group relative rounded-3xl transition-all duration-300
+                bg-gradient-to-br from-white to-slate-50/60
+                hover:shadow-2xl hover:-translate-y-1 
+            `}
+        >
+            <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition pointer-events-none bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-transparent" />
+
+            <div className="p-4 ">
+                <div className="rounded-2xl bg-white/70 backdrop-blur-sm p-3border-slate-100 border-2 border-dashed border-blue-marguerite-200 " >
+                    <ReactECharts
+                        option={getOption}
+                        style={{
+                            height: chartHeight,
+                            width: '100%',
+                            minHeight: '280px'
+                        }}
+                        autoResize
+                        notMerge
+                        lazyUpdate
+                    />
+                </div>
             </div>
         </div>
     )

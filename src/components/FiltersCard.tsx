@@ -153,7 +153,6 @@ export function FilterByMonth({ filters, updateFilter }: FiltersCardProps) {
                     ))}
                 </select>
 
-                {/* Flecha personalizada */}
                 <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
                     <svg
                         className="w-5 h-5"

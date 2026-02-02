@@ -67,8 +67,6 @@ export function DashboardContextProvider({ children }: { children: React.ReactNo
     const [balanceData, setBalanceData] = useState<Balance>(INITIAL_BALANCE)
     const [transactions, setTransactions] = useState<DataOptions[]>([])
 
-    // const [trans, setTrans] = useState<Transaction[]>([])
-
 
     const [filters, setFilters] = useState<DashboardFilters>(INITIAL_FILTERS)
     const [loading, setLoading] = useState(false)
@@ -153,14 +151,20 @@ export function DashboardContextProvider({ children }: { children: React.ReactNo
     }, [filters]);
 
     useEffect(() => {
-        console.log(transactions)
-        console.log(topCategories)
-        console.log(balanceData.transactionsAmount.current.balance)
-    }, [transactions,topCategories,  balanceData])
+        console.log("t", transactions)
+        console.log("top", topCategories)
+        console.log("balance", balanceData)
+    }, [transactions, topCategories, balanceData])
 
 
     return (
-        <DashboardContext.Provider value={{ filters, setFilters, updateFilter, balanceData, topCategories, isMobile, isTablet, allCategories, chartHeight, error, loading, fetchDashboardData, transactions }}>
+        <DashboardContext.Provider value={{
+            filters, setFilters, updateFilter,
+            balanceData, topCategories, isMobile,
+            isTablet, allCategories, chartHeight,
+            error, loading, fetchDashboardData,
+            transactions
+        }}>
             {children}
         </DashboardContext.Provider>
     )

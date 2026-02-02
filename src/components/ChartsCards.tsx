@@ -1,33 +1,31 @@
 import { getOptionCategories, getOptionExpensesAndIncome, getOptionTopFiveCategories } from '../utils/optionsCharts'
 import { useDashboard } from '../context/DashboardContext'
 import ReactECharts from 'echarts-for-react'
+import EmptyStateDemo from './EmptyState'
 
 export default function ChartsCards() {
-    const { topCategories, isMobile, isTablet, allCategories, chartHeight, transactions } = useDashboard()
+    const { balanceData, topCategories, isMobile, isTablet, allCategories, chartHeight, transactions } = useDashboard()
 
-    const dataThree = [
-        { value: 250, name: 'Mon' },
-        { value: 300, name: 'Tue' },
-        { value: -200, name: 'Wed' },
-        { value: 400, name: 'Thu' },
-        { value: -300, name: 'Fri' },
-        { value: 300, name: 'Sat' },
-        { value: 300, name: 'Sun' }
-    ];
+    const totalIncome = balanceData?.transactionsAmount?.current?.income ?? 0
+    const totalExpenses = balanceData?.transactionsAmount?.current?.expense ?? 0
 
     return (
         <div className="space-y-6">
-            <ChartCard getOption={getOptionTopFiveCategories(topCategories, isMobile, isTablet)} chartHeight={chartHeight} />
+            <ChartCard getOption={getOptionExpensesAndIncome(transactions)} chartHeight={chartHeight} />
 
-            <div className='grid md:grid-cols-2 gap-6'>
-                <ChartCard getOption={getOptionCategories(allCategories)} chartHeight={chartHeight}/>
-                <ChartCard getOption={getOptionExpensesAndIncome(transactions)} chartHeight={chartHeight}/>
-            </div>
+            {totalExpenses === 0 && totalIncome > 0 ? (
+                <EmptyStateDemo title='No expenses recorded' description='Your transactions this period were all income. When you record an expense, you will see here which categories you are spending the most in.' />
+            ) :
+                <div className='grid md:grid-cols-2 gap-6'>
+                    <ChartCard getOption={getOptionTopFiveCategories(topCategories, isMobile, isTablet)} chartHeight={chartHeight} />
+                    <ChartCard getOption={getOptionCategories(allCategories)} chartHeight={chartHeight} />
+                </div>
+            }
         </div>
     )
 }
 
-export function ChartCard({ getOption, chartHeight}) {
+export function ChartCard({ getOption, chartHeight }) {
     return (
         <div
             className={`

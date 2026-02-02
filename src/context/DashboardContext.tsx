@@ -91,16 +91,26 @@ export function DashboardContextProvider({ children }: { children: React.ReactNo
     }
 
     function incomeAndExpenses(arr: Transaction[]) {
+        const grouped: Record<string, number> = {}
 
-        return arr.map(item => {
+        arr.forEach(item => {
             const date = new Date(item.date)
-            return {
-                name: filters.month === ''
-                    ? `${date.getMonth() + 1}`
-                    : `${date.getDate()}`,
-                value: item.type == "expense" ? -item.amount : item.amount
-            }
+
+            const key = filters.month === ''
+                ? `${date.getMonth() + 1}`
+                : `${date.getDate()}`
+
+            const value = item.type === "expense"
+                ? -item.amount
+                : item.amount
+
+            grouped[key] = (grouped[key] || 0) + value
         })
+
+        return Object.entries(grouped).map(([name, value]) => ({
+            name,
+            value
+        }))
     }
 
 
@@ -142,9 +152,11 @@ export function DashboardContextProvider({ children }: { children: React.ReactNo
         };
     }, [filters]);
 
-    // useEffect(() => {
-    //     console.log(incomeAndExpenses(trans))
-    // }, [trans])
+    useEffect(() => {
+        console.log(transactions)
+        console.log(topCategories)
+        console.log(balanceData.transactionsAmount.current.balance)
+    }, [transactions,topCategories,  balanceData])
 
 
     return (

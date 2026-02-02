@@ -104,14 +104,16 @@ export default function Dashboard() {
                     <ErrorMessage title={error} onRetry={fetchDashboardData} />
                 ) : loading ? (
                     <Loader description="Loading dashboard..." />
-                ) : hasNoData ? (
-                    <EmptyStateDemo onReset={() => setFilters(INITIAL_FILTERS)} />
                 ) : (
                     <>
                         <BalanceCard />
-                        <ChartsCards />
+                        {hasNoData ? (
+                            <EmptyStateDemo onReset={() => setFilters(INITIAL_FILTERS)} />
+                        ) : <ChartsCards />}
                     </>
                 )}
+
+
             </div>
         </main>
     )

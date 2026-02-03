@@ -34,19 +34,16 @@ export type Category = {
     name: string
 }
 
-export interface TransactionFilters {
-    type?: "" | 'income' | 'expense',
-    category?: string,
-    month?: string,
-    year?: string,
-}
-
 export interface DataOptions {
     value: number,
     name: string
 }
 
-export type DashboardFilters = {
+export type Filters = {
+     type?: "" | 'income' | 'expense',
+    category?: string,
     month?: string,
     year?: string,
 }
+
+export type UpdateFilterType = <K extends keyof Filters>(key: K, value: Filters[K]) => void

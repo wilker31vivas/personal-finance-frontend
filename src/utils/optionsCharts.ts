@@ -2,6 +2,7 @@ import type { DataOptions } from "../types/types";
 
 export const getOptionCategories = (data: DataOptions[]) => {
   const baseOption = {
+    color: '#533ac8',
     title: {
       text: "Category Distribution",
     },
@@ -34,6 +35,7 @@ export const getOptionCategories = (data: DataOptions[]) => {
 
 export const getOptionExpensesAndIncome = (data: DataOptions[]) => {
   const baseOption = {
+    color: '#533ac8',
     title: {
       text: "Income vs. Expenses",
     },

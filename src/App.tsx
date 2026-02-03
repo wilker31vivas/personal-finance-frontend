@@ -1,12 +1,14 @@
 import Dashboard from "./pages/Dashboard"
 import { DashboardContextProvider } from "./context/DashboardContext"
+import Transactions from "./pages/Transactions"
 
 function App() {
   return (
     <div className='flex flex-col bg-body'>
-      <DashboardContextProvider>
+      {/* <DashboardContextProvider>
         <Dashboard></Dashboard>
-      </DashboardContextProvider>
+      </DashboardContextProvider> */}
+      <Transactions></Transactions>
     </div>
   )
 }

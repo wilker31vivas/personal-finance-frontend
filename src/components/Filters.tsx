@@ -1,63 +1,14 @@
-import type { DashboardFilters } from "../types/types"
-import { getYears } from '../api/transactions'
+import type { Filters, UpdateFilterType } from "../types/types"
+import { getYears, getCategories } from '../api/transactions'
 import { useEffect, useState } from "react"
 
-interface FiltersContainerProps {
-    filters: filters
-    updateFilter: updateFilter
-    categories: string[]
+type ButtonProps = {
     resetFilters: () => void
 }
 
-type filters = DashboardFilters
-type updateFilter = <K extends keyof DashboardFilters>(key: K, value: DashboardFilters[K]) => void
-
 interface FiltersCardProps {
-    filters: filters
-    updateFilter: updateFilter
-}
-
-export function FiltersCard({ filters, updateFilter, categories, resetFilters }: FiltersContainerProps) {
-
-    return (
-        <div className="bg-white rounded-2xl shadow-md p-6 mb-6">
-            <h3 className="text-sm sm:text-xl font-semibold text-slate-700 mb-4 uppercase tracking-wide">filters</h3>
-            <div className="flex flex-col md:grid md:grid-cols-5 gap-4 justify-center items-center">
-
-                {/* Years */}
-                <FilterByYear filters={filters} updateFilter={updateFilter}></FilterByYear>
-                <FilterByMonth filters={filters} updateFilter={updateFilter}></FilterByMonth>
-
-                <div className="w-full">
-                    <label htmlFor='categories' className="block text-sm font-medium text-slate-700 mb-2">Categories</label>
-                    <select id="categories" name="categories" value={filters.category || ''} onChange={e => updateFilter('category', e.target.value)} className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-slate-50 hover:bg-white cursor-pointer">
-                        <option value="">All categories</option>
-                        {categories.map((item, index) => (
-                            <option value={item} key={index}>{item}</option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="w-full">
-                    <label htmlFor='types' className="block text-sm font-medium text-slate-700 mb-2">Types</label>
-                    <select id="types" name="types" value={filters.type || ''} onChange={e => updateFilter('type', e.target.value as 'income' | 'expense' | "")} className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-slate-50 hover:bg-white cursor-pointer">
-                        <option value="">All</option>
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
-                    </select>
-                </div>
-
-                <button
-                    onClick={() => {
-                        resetFilters()
-                    }}
-                    className="cursor-pointer text-blue-600 hover:text-blue-700 font-medium"
-                >
-                    Clean filters
-                </button>
-            </div>
-        </div>
-    )
+    filters: Filters
+    updateFilter: UpdateFilterType
 }
 
 export function FilterByYear({ filters, updateFilter }: FiltersCardProps) {
@@ -168,4 +119,59 @@ export function FilterByMonth({ filters, updateFilter }: FiltersCardProps) {
 
         </div>
     );
+}
+
+export function FilterByCategory({ filters, updateFilter }: FiltersCardProps) {
+    const [categories, setCategories] = useState<string[]>([])
+
+    async function loadCategories() {
+        try {
+            const res = await getCategories()
+            const c = res.map((item) => item.name)
+            setCategories(c)
+        } catch (err) {
+            console.error('Error loading categories:', err)
+        }
+    }
+
+    useEffect(() => {
+        loadCategories()
+    }, [])
+
+
+    return (
+        <div className="w-full">
+            <label htmlFor='categories' className="block text-sm font-medium text-slate-700 mb-2">Categories</label>
+            <select id="categories" name="categories" value={filters.category || ''} onChange={e => updateFilter('category', e.target.value)} className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-slate-50 hover:bg-white cursor-pointer">
+                <option value="">All categories</option>
+                {categories.map((item, index) => (
+                    <option value={item} key={index}>{item}</option>
+                ))}
+            </select>
+        </div>
+    )
+}
+
+export function FilterByType({ filters, updateFilter }: FiltersCardProps) {
+    return (
+        <div className="w-full">
+            <label htmlFor='types' className="block text-sm font-medium text-slate-700 mb-2">Types</label>
+            <select id="types" name="types" value={filters.type || ''} onChange={e => updateFilter('type', e.target.value as 'income' | 'expense' | "")} className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-slate-50 hover:bg-white cursor-pointer">
+                <option value="">All</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </select>
+        </div>
+    )
+}
+
+export function FilterButton({ resetFilters }: ButtonProps) {
+    <button
+        onClick={() => {
+            resetFilters()
+        }}
+        className="cursor-pointer text-blue-600 hover:text-blue-700 font-medium"
+    >
+        Clean filters
+    </button>
 }

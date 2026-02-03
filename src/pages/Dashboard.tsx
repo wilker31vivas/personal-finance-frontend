@@ -1,16 +1,16 @@
 import BalanceCard from '../components/BalanceCard';
 import Header from '../components/Header'
 import ChartsCards from '../components/ChartsCards'
-import { FilterByYear, FilterByMonth } from '../components/FiltersCard'
+import { FilterByYear, FilterByMonth } from '../components/Filters'
 import { useDashboard, INITIAL_FILTERS } from '../context/DashboardContext';
 import ErrorMessage from '../components/ErrorMessage'
 import Loader from '../components/Loader';
-import type { DashboardFilters } from '../types/types';
+import type { Filters } from '../types/types';
 import EmptyStateDemo from '../components/EmptyState';
 
 type FilterSectionProps = {
-    filters: DashboardFilters
-    updateFilter: <K extends keyof DashboardFilters>(key: K, value: DashboardFilters[K]) => void
+    filters: Filters
+    updateFilter: <K extends keyof Filters>(key: K, value: Filters[K]) => void
 }
 
 function FilterSection({ filters, updateFilter }: FilterSectionProps) {

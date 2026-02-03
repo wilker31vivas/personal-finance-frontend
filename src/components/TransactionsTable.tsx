@@ -1,13 +1,13 @@
 import Loader from './Loader'
-import type { Transaction, TransactionFilters } from "../types/types"
+import type { Transaction, Filters } from "../types/types"
 import { formatCurrency } from '../utils/formatCurrency'
-import { INITIAL_FILTERS } from './Transactions'
+import { INITIAL_FILTERS } from '../utils/const'
 
 interface TransactionsTableProps {
     loading: boolean
     transactions: Transaction[]
-    setFilters: React.Dispatch<React.SetStateAction<TransactionFilters>>
-    fetchTransactions: (filters: TransactionFilters) => Promise<void>
+    setFilters: React.Dispatch<React.SetStateAction<Filters>>
+    fetchTransactions: (filters: Filters) => Promise<void>
 }
 
 export default function TransactionsTable({ loading, transactions, setFilters, fetchTransactions }: TransactionsTableProps) {
@@ -48,7 +48,6 @@ export default function TransactionsTable({ loading, transactions, setFilters, f
                                         <button
                                             onClick={() => {
                                                 setFilters(INITIAL_FILTERS)
-                                                fetchTransactions(INITIAL_FILTERS)
                                             }}
                                             className="cursor-pointer text-blue-600 hover:text-blue-700 font-medium text-sm"
                                         >

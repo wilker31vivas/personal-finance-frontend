@@ -1,16 +1,9 @@
 import Loader from './Loader'
-import type { Transaction, Filters } from "../types/types"
 import { formatCurrency } from '../utils/formatCurrency'
-import { INITIAL_FILTERS } from '../utils/const'
+import { useTransactions, INITIAL_FILTERS } from '../context/TransactionsContext';
 
-interface TransactionsTableProps {
-    loading: boolean
-    transactions: Transaction[]
-    setFilters: React.Dispatch<React.SetStateAction<Filters>>
-    fetchTransactions: (filters: Filters) => Promise<void>
-}
-
-export default function TransactionsTable({ loading, transactions, setFilters, fetchTransactions }: TransactionsTableProps) {
+export default function TransactionsTable() {
+    const { loading, transactions, setFilters } = useTransactions()
     return (
         <div className="bg-white rounded-2xl shadow-md overflow-hidden">
             <div className="overflow-x-auto">

@@ -165,13 +165,11 @@ export function FilterByType({ filters, updateFilter }: FiltersCardProps) {
     )
 }
 
-export function FilterButton({ resetFilters }: ButtonProps) {
+export const FilterButton = ({ resetFilters }: ButtonProps) => (
     <button
-        onClick={() => {
-            resetFilters()
-        }}
+        onClick={resetFilters}
         className="cursor-pointer text-blue-600 hover:text-blue-700 font-medium"
     >
         Clean filters
     </button>
-}
+);

@@ -1,12 +1,12 @@
 import { createContext, useState, useEffect, useContext } from "react";
-import type { DataOptions, DashboardFilters, Balance, Transaction } from '../types/types'
+import type { DataOptions, Filters, Balance, Transaction } from '../types/types'
 import { getTopCategories, getAllCategories, getBalance, getTransactions } from '../api/transactions'
 
 type DashboardContextType = {
-    filters: DashboardFilters
-    updateFilter: <K extends keyof DashboardFilters>(
+    filters: Filters
+    updateFilter: <K extends keyof Filters>(
         key: K,
-        value: DashboardFilters[K]
+        value: Filters[K]
     ) => void
     balanceData: Balance
     topCategories: DataOptions[]
@@ -17,7 +17,7 @@ type DashboardContextType = {
     loading: boolean
     error: string | null
     fetchDashboardData(): Promise<void>
-    setFilters: React.Dispatch<React.SetStateAction<DashboardFilters>>
+    setFilters: React.Dispatch<React.SetStateAction<Filters>>
     transactions: DataOptions[]
 }
 
@@ -48,7 +48,7 @@ const date = new Date();
 const currentMonth = date.getMonth() + 1;
 const currentYear = date.getFullYear();
 
-export const INITIAL_FILTERS: DashboardFilters = { month: currentMonth.toString(), year: currentYear.toString() }
+export const INITIAL_FILTERS: Filters = { month: currentMonth.toString(), year: currentYear.toString() }
 
 const INITIAL_CATEGORIES: DataOptions[] = [{ name: "", value: 0 }]
 
@@ -66,9 +66,7 @@ export function DashboardContextProvider({ children }: { children: React.ReactNo
     const [allCategories, setAllCategories] = useState<DataOptions[]>(INITIAL_CATEGORIES)
     const [balanceData, setBalanceData] = useState<Balance>(INITIAL_BALANCE)
     const [transactions, setTransactions] = useState<DataOptions[]>([])
-
-
-    const [filters, setFilters] = useState<DashboardFilters>(INITIAL_FILTERS)
+    const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [cancelled, setCancelled] = useState(false)
@@ -78,9 +76,9 @@ export function DashboardContextProvider({ children }: { children: React.ReactNo
 
     const chartHeight = isMobile ? 300 : isTablet ? 350 : 400;
 
-    const updateFilter = <K extends keyof DashboardFilters>(
+    const updateFilter = <K extends keyof Filters>(
         key: K,
-        value: DashboardFilters[K]
+        value: Filters[K]
     ) => {
         setFilters(prevFilters => ({
             ...prevFilters,
@@ -110,7 +108,6 @@ export function DashboardContextProvider({ children }: { children: React.ReactNo
             value
         }))
     }
-
 
     async function fetchDashboardData() {
         setLoading(true);
@@ -149,13 +146,6 @@ export function DashboardContextProvider({ children }: { children: React.ReactNo
             setCancelled(true);
         };
     }, [filters]);
-
-    useEffect(() => {
-        console.log("t", transactions)
-        console.log("top", topCategories)
-        console.log("balance", balanceData)
-    }, [transactions, topCategories, balanceData])
-
 
     return (
         <DashboardContext.Provider value={{

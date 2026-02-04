@@ -3,13 +3,18 @@ import { getTransactions } from '../api/transactions'
 import type { Transaction, Filters, UpdateFilterType } from "../types/types"
 
 type TransactionsContextType = {
-    transactions: Transaction[]
+    transactions: Transaction[][]
     error: string | null
     loading: boolean
     filters: Filters
     updateFilter: UpdateFilterType
     resetFilters: () => void
     setFilters: (value: React.SetStateAction<Filters>) => void
+    pages: { pagesTotal: number; pageCurrent: number; }
+    setPages: React.Dispatch<React.SetStateAction<{
+        pagesTotal: number;
+        pageCurrent: number;
+    }>>
 }
 
 export const TransactionsContext = createContext<TransactionsContextType | null>(null)
@@ -17,10 +22,14 @@ export const TransactionsContext = createContext<TransactionsContextType | null>
 export const INITIAL_FILTERS: Filters = { month: "", year: "", type: "", category: "" }
 
 export function TransactionsContextProvider({ children }: { children: React.ReactNode }) {
-    const [transactions, setTransactions] = useState<Transaction[]>([])
+    const [transactions, setTransactions] = useState<Transaction[][]>([])
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
     const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS)
+    const [pages, setPages] = useState({
+        pagesTotal: 0,
+        pageCurrent: 0
+    })
 
     const resetFilters = () => {
         setFilters(INITIAL_FILTERS)
@@ -30,6 +39,19 @@ export function TransactionsContextProvider({ children }: { children: React.Reac
         setFilters(prev => ({ ...prev, [key]: value || "" }))
     }
 
+    function chunkArray(array: Transaction[], size: number) {
+        const result = [];
+
+        for (let i = 0; i < array.length; i += size) {
+            const chunk = array.slice(i, i + size);
+            result.push(chunk);
+        }
+
+        return result;
+    }
+
+    
+
     useEffect(() => {
         let cancelled = false;
 
@@ -38,7 +60,11 @@ export function TransactionsContextProvider({ children }: { children: React.Reac
             setError(null)
             try {
                 const t = await getTransactions(filters)
-                if (!cancelled) setTransactions(t)
+                if (!cancelled) { 
+                    const tPages =chunkArray(t, 5)
+                    setTransactions(tPages); 
+                    setPages(prev => ({ ...prev, pagesTotal: tPages.length })) 
+                }
             } catch (err) {
                 if (!cancelled) {
                     setError(err instanceof Error ? err.message : 'Error loading transactions')
@@ -55,9 +81,13 @@ export function TransactionsContextProvider({ children }: { children: React.Reac
         };
     }, [filters])
 
+    useEffect(() => {
+        console.log(pages, transactions)
+    }, [pages, transactions])
+
     return (
         <TransactionsContext.Provider value={{
-            transactions, error, loading, filters, updateFilter, resetFilters, setFilters
+            transactions, error, loading, filters, updateFilter, resetFilters, setFilters, pages, setPages
         }}>
             {children}
         </TransactionsContext.Provider>

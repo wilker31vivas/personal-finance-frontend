@@ -60,7 +60,7 @@ export default function Dashboard() {
                     <>
                         <BalanceCard />
                         {noMovements ? (
-                            <EmptyStateDemo onReset={() => setFilters(INITIAL_FILTERS)} title='No Data Available' description='There are no recorded movements during this period. Try selecting a different month or year to view your financial data.' />
+                            <EmptyStateDemo titleOnReset='View Current Month' onReset={() => setFilters(INITIAL_FILTERS)} title='No Data Available' description='There are no recorded movements during this period. Try selecting a different month or year to view your financial data.' />
                         ) : <ChartsCards />}
                     </>
                 )}

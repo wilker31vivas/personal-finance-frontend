@@ -30,7 +30,7 @@ export function FilterByYear({ filters, updateFilter }: FiltersCardProps) {
     return (
         <div className="w-full flex flex-col gap-2">
             <label
-                className="text-sm font-semibold items-center gap-2"
+                className="text-sm text-text-muted uppercase font-semibold items-center gap-2"
             >
                 Year
             </label>
@@ -84,7 +84,7 @@ export function FilterByMonth({ filters, updateFilter }: FiltersCardProps) {
         <div className="w-full flex flex-col gap-2">
             <label
                 htmlFor="month"
-                className="text-sm font-semibold items-center gap-2"
+                className="text-sm text-text-muted uppercase font-semibold items-center gap-2"
             >
                 Month
             </label>
@@ -140,27 +140,65 @@ export function FilterByCategory({ filters, updateFilter }: FiltersCardProps) {
 
 
     return (
-        <div className="w-full">
-            <label htmlFor='categories' className="block text-sm font-medium text-slate-700 mb-2">Categories</label>
-            <select id="categories" name="categories" value={filters.category || ''} onChange={e => updateFilter('category', e.target.value)} className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-slate-50 hover:bg-white cursor-pointer">
-                <option value="">All categories</option>
-                {categories.map((item, index) => (
-                    <option value={item} key={index}>{item}</option>
-                ))}
-            </select>
+        <div className="w-full flex flex-col gap-2">
+            <label htmlFor='categories' className="text-sm text-text-muted uppercase font-semibold items-center gap-2">Categories</label>
+            <div className="relative w-full">
+                <select
+                    id="categories"
+                    name="categories"
+                    value={filters.category || ''}
+                    onChange={e => updateFilter('category', e.target.value)}
+                    className="w-full appearance-none px-4 py-3 pr-10 bg-white border-2 border-gray-200 rounded-xl font-medium text-text shadow-sm hover:shadow-md hover:border-blue-marguerite-300 focus:border-blue-marguerite-500 focus:ring-4 focus:ring-blue-marguerite-100 transition-all duration-300 outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <option value="">All years</option>
+                    <option value="">All categories</option>
+                    {categories.map((item, index) => (
+                        <option value={item} key={index}>{item}</option>
+                    ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                    <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            </div>
         </div>
     )
 }
 
 export function FilterByType({ filters, updateFilter }: FiltersCardProps) {
     return (
-        <div className="w-full">
-            <label htmlFor='types' className="block text-sm font-medium text-slate-700 mb-2">Types</label>
-            <select id="types" name="types" value={filters.type || ''} onChange={e => updateFilter('type', e.target.value as 'income' | 'expense' | "")} className="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none bg-slate-50 hover:bg-white cursor-pointer">
-                <option value="">All</option>
-                <option value="income">Income</option>
-                <option value="expense">Expense</option>
-            </select>
+        <div className="w-full flex flex-col gap-2">
+            <label htmlFor='types' className="text-sm text-text-muted uppercase font-semibold items-center gap-2">Types</label>
+            <div className="relative w-full">
+                <select
+                    id="types"
+                    name="types"
+                    value={filters.type || ''} onChange={e => updateFilter('type', e.target.value as 'income' | 'expense' | "")}
+                    className="w-full appearance-none px-4 py-3 pr-10 bg-white border-2 border-gray-200 rounded-xl font-medium text-text shadow-sm hover:shadow-md hover:border-blue-marguerite-300 focus:border-blue-marguerite-500 focus:ring-4 focus:ring-blue-marguerite-100 transition-all duration-300 outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <option value="">All</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400">
+                    <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                    >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            </div>
         </div>
     )
 }
@@ -168,8 +206,8 @@ export function FilterByType({ filters, updateFilter }: FiltersCardProps) {
 export const FilterButton = ({ resetFilters }: ButtonProps) => (
     <button
         onClick={resetFilters}
-        className="cursor-pointer text-blue-600 hover:text-blue-700 font-medium"
+        className="cursor-pointer text-blue-marguerite-600 hover:text-blue-marguerite-700 font-medium"
     >
-        Clean filters
+        Reset filters
     </button>
 );

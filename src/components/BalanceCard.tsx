@@ -9,9 +9,9 @@ export default function BalanceCard() {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <StatCard title="Total incomes" amount={income} change={balanceData.change.income} bgColor="bg-sucess" titleColor="text-surface"></StatCard>
+            <StatCard title="Total incomes" amount={income} change={balanceData.change.income} bgColor="bg-success" titleColor="text-surface"></StatCard>
             <StatCard title="Total expenses" amount={expense} change={balanceData.change.expense} bgColor="bg-danger" titleColor="text-surface"></StatCard>
-            <StatCard title="Balance" amount={balance} change={balanceData.change.balance} bgColor="bg-white" textColor={balance !== null && balance >= 0 ? 'text-sucess' : 'text-danger'}></StatCard>
+            <StatCard title="Balance" amount={balance} change={balanceData.change.balance} bgColor="bg-white" textColor={balance !== null && balance >= 0 ? 'text-success' : 'text-danger'}></StatCard>
         </div>
     )
 }

@@ -6,7 +6,7 @@ type EmptyStateProps = {
     children?: React.ReactNode
 };
 
-function EmptyState({ title, description, onReset, titleOnReset, children }: EmptyStateProps) {
+function EmptyStateCard({ title, description, onReset, titleOnReset, children }: EmptyStateProps) {
     return (
         <div className="relative overflow-hidden bg-gradient-to-br from-white to-blue-marguerite-50 border-2 border-dashed border-blue-marguerite-200 rounded-3xl shadow-lg">
 
@@ -36,13 +36,13 @@ function EmptyState({ title, description, onReset, titleOnReset, children }: Emp
     );
 }
 
-export default function EmptyStateDemo({ onReset, title, description, titleOnReset, children }: EmptyStateProps) {
+export default function EmptyState({ onReset, title, description, titleOnReset, children }: EmptyStateProps) {
     return (
         <div className="p-6 group relative rounded-3xl transition-all duration-300
                 bg-gradient-to-br from-white to-slate-50/60
                 hover:shadow-2xl hover:-translate-y-1">
             <div className="max-w-3xl mx-auto">
-                <EmptyState onReset={onReset} title={title} description={description} titleOnReset={titleOnReset} children={children} />
+                <EmptyStateCard onReset={onReset} title={title} description={description} titleOnReset={titleOnReset} children={children} />
             </div>
         </div>
     );

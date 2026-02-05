@@ -1,7 +1,7 @@
 import { getOptionCategories, getOptionExpensesAndIncome, getOptionTopFiveCategories } from '../utils/optionsCharts'
 import { useDashboard } from '../context/DashboardContext'
 import ReactECharts from 'echarts-for-react'
-import EmptyStateDemo from './EmptyState'
+import EmptyState from './EmptyState'
 
 export default function ChartsCards() {
     const { balanceData, topCategories, isMobile, isTablet, allCategories, chartHeight, transactions } = useDashboard()
@@ -14,7 +14,7 @@ export default function ChartsCards() {
             <ChartCard getOption={getOptionExpensesAndIncome(transactions)} chartHeight={chartHeight} />
 
             {totalExpenses === 0 && totalIncome > 0 ? (
-                <EmptyStateDemo title='No expenses recorded' description='Your transactions this period were all income. When you record an expense, you will see here which categories you are spending the most in.' />
+                <EmptyState title='No expenses recorded' description='Your transactions this period were all income. When you record an expense, you will see here which categories you are spending the most in.' />
             ) :
                 <div className='grid md:grid-cols-2 gap-6'>
                     <ChartCard getOption={getOptionTopFiveCategories(topCategories, isMobile, isTablet)} chartHeight={chartHeight} />

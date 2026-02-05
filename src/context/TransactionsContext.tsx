@@ -3,18 +3,15 @@ import { getTransactions } from '../api/transactions'
 import type { Transaction, Filters, UpdateFilterType } from "../types/types"
 
 type TransactionsContextType = {
-    transactions: Transaction[][]
+    transactionPages: Transaction[][]
     error: string | null
     loading: boolean
     filters: Filters
     updateFilter: UpdateFilterType
     resetFilters: () => void
     setFilters: (value: React.SetStateAction<Filters>) => void
-    pages: { pagesTotal: number; pageCurrent: number; }
-    setPages: React.Dispatch<React.SetStateAction<{
-        pagesTotal: number;
-        pageCurrent: number;
-    }>>
+    pageCurrent: number
+    setPageCurrent: React.Dispatch<React.SetStateAction<number>>
 }
 
 export const TransactionsContext = createContext<TransactionsContextType | null>(null)
@@ -22,14 +19,11 @@ export const TransactionsContext = createContext<TransactionsContextType | null>
 export const INITIAL_FILTERS: Filters = { month: "", year: "", type: "", category: "" }
 
 export function TransactionsContextProvider({ children }: { children: React.ReactNode }) {
-    const [transactions, setTransactions] = useState<Transaction[][]>([])
+    const [transactionPages, setTransactionsPages] = useState<Transaction[][]>([])
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
     const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS)
-    const [pages, setPages] = useState({
-        pagesTotal: 0,
-        pageCurrent: 0
-    })
+    const [pageCurrent, setPageCurrent] = useState(0)
 
     const resetFilters = () => {
         setFilters(INITIAL_FILTERS)
@@ -37,6 +31,7 @@ export function TransactionsContextProvider({ children }: { children: React.Reac
 
     const updateFilter = <K extends keyof Filters>(key: K, value: Filters[K]) => {
         setFilters(prev => ({ ...prev, [key]: value || "" }))
+        setPageCurrent(0)
     }
 
     function chunkArray(array: Transaction[], size: number) {
@@ -50,8 +45,6 @@ export function TransactionsContextProvider({ children }: { children: React.Reac
         return result;
     }
 
-    
-
     useEffect(() => {
         let cancelled = false;
 
@@ -60,10 +53,9 @@ export function TransactionsContextProvider({ children }: { children: React.Reac
             setError(null)
             try {
                 const t = await getTransactions(filters)
-                if (!cancelled) { 
-                    const tPages =chunkArray(t, 5)
-                    setTransactions(tPages); 
-                    setPages(prev => ({ ...prev, pagesTotal: tPages.length })) 
+                if (!cancelled) {
+                    const tPages = chunkArray(t, 5)
+                    setTransactionsPages(tPages);
                 }
             } catch (err) {
                 if (!cancelled) {
@@ -81,13 +73,9 @@ export function TransactionsContextProvider({ children }: { children: React.Reac
         };
     }, [filters])
 
-    useEffect(() => {
-        console.log(pages, transactions)
-    }, [pages, transactions])
-
     return (
         <TransactionsContext.Provider value={{
-            transactions, error, loading, filters, updateFilter, resetFilters, setFilters, pages, setPages
+            transactionPages, error, loading, filters, updateFilter, resetFilters, setFilters, pageCurrent, setPageCurrent
         }}>
             {children}
         </TransactionsContext.Provider>

@@ -2,6 +2,7 @@ import Dashboard from "./pages/Dashboard"
 import { DashboardContextProvider } from "./context/DashboardContext"
 import { TransactionsContextProvider } from "./context/TransactionsContext"
 import Transactions from "./pages/Transactions"
+import Categories from "./pages/Categories"
 
 function App() {
   return (
@@ -9,9 +10,11 @@ function App() {
       {/* <DashboardContextProvider>
         <Dashboard></Dashboard>
       </DashboardContextProvider> */}
-      <TransactionsContextProvider>
+      {/* <TransactionsContextProvider>
         <Transactions></Transactions>
-      </TransactionsContextProvider>
+      </TransactionsContextProvider> */}
+      <Categories></Categories>
+
     </div>
   )
 }

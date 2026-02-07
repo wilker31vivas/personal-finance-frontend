@@ -1,26 +1,14 @@
-import { useState } from "react"
 import Loader from "./Loader"
-import { getCategories } from "../api/transactions";
-import type { Category } from "../types/types";
 import EmptyState from "./EmptyState";
+import type { Category } from "../types/types";
 
-export default function CategoriesTable() {
-    const [loading, setLoading] = useState(false)
-    const [categories, setCategories] = useState<Category[]>([])
+type CategoriesTableProps = {
+    loading: boolean
+    categories: Category[]
+    fetchCategoriesdData: () => Promise<void>
+}
 
-    async function fetchCategoriesdData() {
-        setLoading(true);
-
-        try {
-            const c = await getCategories();
-            setCategories(c)
-        } catch (err) {
-            // setError(err instanceof Error ? err.message : "Error loading dashboard data");
-        } finally {
-            setLoading(false);
-        }
-    }
-
+export default function CategoriesTable({ loading, categories, fetchCategoriesdData }: CategoriesTableProps) {
     return (
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-lg">
             <div className="overflow-x-auto">
@@ -28,7 +16,7 @@ export default function CategoriesTable() {
                     <thead>
                         <tr className="bg-gradient-to-r from-blue-marguerite-50 to-purple-50 border-b-2 border-blue-marguerite-200">
                             <th className="px-6 py-4 text-xs font-bold text-blue-marguerite-700 uppercase tracking-wider">
-                                Name
+                                Category Name
                             </th>
                             <th className="px-6 py-4 text-xs font-bold text-blue-marguerite-700 uppercase tracking-wider text-right">
                                 Actions
@@ -46,10 +34,10 @@ export default function CategoriesTable() {
                             <tr>
                                 <td colSpan={2} className="p-6">
                                     <EmptyState
-                                        title="No categories found"
-                                        description="We couldn't find any categories with the applied filters. Try adjusting your search or clear the filters."
+                                        title="No categories yet"
+                                        description="Start by creating your first category to organize your transactions."
                                         onReset={fetchCategoriesdData}
-                                        titleOnReset="Clear Filters"
+                                        titleOnReset="Create Category"
                                     />
                                 </td>
                             </tr>
@@ -61,29 +49,35 @@ export default function CategoriesTable() {
                                 >
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            {/* Category indicator */}
-                                            <div className="w-2 h-2 rounded-full bg-blue-marguerite-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                            <span className="text-sm font-semibold text-text group-hover:text-blue-marguerite-700 transition-colors">
+                                            <div className="w-2.5 h-2.5 rounded-full bg-blue-marguerite-600 opacity-70 group-hover:opacity-100 transition" />
+
+                                            <span className="text-sm font-semibold text-gray-800 group-hover:text-blue-marguerite-700 transition-colors duration-200">
                                                 {item.name}
                                             </span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div className="flex gap-2 justify-end">
-                                            {/* Edit button */}
+                                        <div className="flex gap-2 justify-end items-center">
                                             <button
-                                                className="group/btn flex items-center gap-2 px-4 py-2 bg-blue-marguerite-100 hover:bg-blue-marguerite-500 text-blue-marguerite-700 hover:text-white rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-md active:scale-95"
+                                                onClick={() => alert('edit')}
+                                                className="group/btn flex items-center gap-2 px-4 py-2.5 bg-blue-marguerite-50 hover:bg-blue-marguerite-500 text-blue-marguerite-700 hover:text-white rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 border border-blue-marguerite-200 hover:border-blue-marguerite-500"
                                                 aria-label={`Edit ${item.name}`}
                                             >
-                                                <span className="">Edit</span>
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                                <span className="text-sm">Edit</span>
                                             </button>
 
-                                            {/* Delete button */}
                                             <button
-                                                className="group/btn flex items-center gap-2 px-4 py-2 bg-red-100 hover:bg-red-500 text-red-700 hover:text-white rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-md active:scale-95"
+                                                onClick={() => alert('delete')}
+                                                className="group/btn flex items-center gap-2 px-4 py-2.5 bg-red-50 hover:bg-red-500 text-red-700 hover:text-white rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 border border-red-200 hover:border-red-500"
                                                 aria-label={`Delete ${item.name}`}
                                             >
-                                                <span >Delete</span>
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                                <span className="text-sm">Delete</span>
                                             </button>
                                         </div>
                                     </td>

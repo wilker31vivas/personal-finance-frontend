@@ -26,7 +26,6 @@ export default function Categories() {
         fetchCategoriesdData()
     }, [])
 
-
     return (
         <div className="min-h-screen m-4">
             <div className="max-w-7xl mx-auto">
@@ -38,13 +37,13 @@ export default function Categories() {
                         </h1>
                         <p className="text-text-muted mt-1">Manage your categories</p>
                     </div>
-                    <button aria-label="Create new Caterories" className="text-lg cursor-pointer bg-gradient-to-r from-blue-marguerite-500 to-blue-marguerite-600 hover:from-blue-marguerite-600 hover:to-blue-marguerite-700 text-white  px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95">
+                    <button onClick={() => alert('category created')} aria-label="Create new Caterories" className="text-lg cursor-pointer bg-gradient-to-r from-blue-marguerite-500 to-blue-marguerite-600 hover:from-blue-marguerite-600 hover:to-blue-marguerite-700 text-white  px-6 py-2.5 rounded-xl font-semibold flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 active:scale-95">
                         + New Caterory
                     </button>
                 </div>
 
                 {error ? (
-                    <ErrorMessage  title={error} onRetry={fetchCategoriesdData}></ErrorMessage>
+                    <ErrorMessage title={error} onRetry={fetchCategoriesdData}></ErrorMessage>
                 ) :
                     <CategoriesTable loading={loading} categories={categories} fetchCategoriesdData={fetchCategoriesdData} setCategories={setCategories}></CategoriesTable>
                 }

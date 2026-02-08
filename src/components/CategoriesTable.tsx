@@ -72,7 +72,7 @@ export default function CategoriesTable({ loading, categories, fetchCategoriesdD
                                     <EmptyState
                                         title="No categories yet"
                                         description="Start by creating your first category to organize your transactions."
-                                        onReset={fetchCategoriesdData}
+                                        onReset={()=> alert('category created')}
                                         titleOnReset="Create Category"
                                     />
                                 </td>
@@ -119,7 +119,7 @@ export default function CategoriesTable({ loading, categories, fetchCategoriesdD
                                                 <span className="text-sm">Edit</span>
                                             </button>
                                             <button
-                                                onClick={() => alert('delete')}
+                                                onClick={() => alert(`Category ${item.name} deleted`)}
                                                 className="group/btn flex items-center gap-2 px-4 py-2.5 bg-red-50 hover:bg-red-500 text-red-700 hover:text-white rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 border border-red-200 hover:border-red-500"
                                                 aria-label={`Delete ${item.name}`}
                                             >

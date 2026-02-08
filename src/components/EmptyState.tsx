@@ -12,7 +12,7 @@ export default function EmptyState({ onReset, title, description, titleOnReset, 
 
             <div className="relative px-8 py-12 text-center">
                 {children}
-                <h2 className="text-2xl sm:text-3xl font-bold text-text mb-3">
+                <h2 className="text-2xl sm:text-3xl font-bold text-blue-marguerite-700 mb-3">
                     {title}
                 </h2>
                 <p className="text-base text-text-muted max-w-md mx-auto leading-relaxed mb-8">

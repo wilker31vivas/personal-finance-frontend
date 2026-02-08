@@ -31,7 +31,7 @@ export default function Categories() {
         <div className="min-h-screen m-4">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="flex flex-col justify-between items-center gap-4 mb-8 sm:flex-row">
+                <div className="flex flex-col justify-between items-center gap-4 mb-8 sm:flex-row text-center">
                     <div>
                         <h1 className="text-3xl sm:text-4xl font-bold text-text bg-gradient-to-r from-blue-marguerite-600 to-purple-600 bg-clip-text text-transparent">
                             Categories
@@ -46,7 +46,7 @@ export default function Categories() {
                 {error ? (
                     <ErrorMessage  title={error} onRetry={fetchCategoriesdData}></ErrorMessage>
                 ) :
-                    <CategoriesTable loading={loading} categories={categories} fetchCategoriesdData={fetchCategoriesdData}></CategoriesTable>
+                    <CategoriesTable loading={loading} categories={categories} fetchCategoriesdData={fetchCategoriesdData} setCategories={setCategories}></CategoriesTable>
                 }
             </div>
         </div>

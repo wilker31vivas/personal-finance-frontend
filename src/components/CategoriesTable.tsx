@@ -1,14 +1,50 @@
 import Loader from "./Loader"
 import EmptyState from "./EmptyState";
 import type { Category } from "../types/types";
+import { useState } from "react";
 
 type CategoriesTableProps = {
     loading: boolean
     categories: Category[]
     fetchCategoriesdData: () => Promise<void>
+    setCategories: React.Dispatch<React.SetStateAction<Category[]>>
 }
 
-export default function CategoriesTable({ loading, categories, fetchCategoriesdData }: CategoriesTableProps) {
+export default function CategoriesTable({ loading, categories, fetchCategoriesdData, setCategories }: CategoriesTableProps) {
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editingName, setEditingName] = useState('');
+
+    const handleStartEdit = (category: Category) => {
+        setEditingId(category.id);
+        setEditingName(category.name);
+    };
+
+    const handleSaveEdit = async (categoryId: number) => {
+        try {
+
+            //Hacer fetch PUT categories ...
+
+            // Guardar temporalmente la categoria
+            setCategories((prev) =>
+                prev.map((category) =>
+                    category.id === categoryId
+                        ? { ...category, name: editingName }
+                        : category
+                )
+            );
+
+            setEditingId(null);
+            setEditingName('');
+        } catch (error) {
+            console.error('Error updating category:', error);
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingId(null);
+        setEditingName('');
+    };
+
     return (
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-lg">
             <div className="overflow-x-auto">
@@ -50,16 +86,30 @@ export default function CategoriesTable({ loading, categories, fetchCategoriesdD
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
                                             <div className="w-2.5 h-2.5 rounded-full bg-blue-marguerite-600 opacity-70 group-hover:opacity-100 transition" />
-
-                                            <span className="text-sm font-semibold text-gray-800 group-hover:text-blue-marguerite-700 transition-colors duration-200">
-                                                {item.name}
-                                            </span>
+                                            {editingId === item.id ? (
+                                                <input
+                                                    type="text"
+                                                    value={editingName}
+                                                    onChange={(e) => setEditingName(e.target.value)}
+                                                    onBlur={() => handleSaveEdit(item.id)}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter') handleSaveEdit(item.id);
+                                                        if (e.key === 'Escape') handleCancelEdit();
+                                                    }}
+                                                    autoFocus
+                                                    className="text-sm font-semibold text-gray-800 border-2 border-blue-marguerite-500 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-marguerite-300"
+                                                />
+                                            ) : (
+                                                <span className="text-sm font-semibold text-gray-800 group-hover:text-blue-marguerite-700 transition-colors duration-200">
+                                                    {item.name}
+                                                </span>
+                                            )}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex gap-2 justify-end items-center">
                                             <button
-                                                onClick={() => alert('edit')}
+                                                onClick={() => handleStartEdit(item)}
                                                 className="group/btn flex items-center gap-2 px-4 py-2.5 bg-blue-marguerite-50 hover:bg-blue-marguerite-500 text-blue-marguerite-700 hover:text-white rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 border border-blue-marguerite-200 hover:border-blue-marguerite-500"
                                                 aria-label={`Edit ${item.name}`}
                                             >
@@ -68,7 +118,6 @@ export default function CategoriesTable({ loading, categories, fetchCategoriesdD
                                                 </svg>
                                                 <span className="text-sm">Edit</span>
                                             </button>
-
                                             <button
                                                 onClick={() => alert('delete')}
                                                 className="group/btn flex items-center gap-2 px-4 py-2.5 bg-red-50 hover:bg-red-500 text-red-700 hover:text-white rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 border border-red-200 hover:border-red-500"
@@ -86,6 +135,46 @@ export default function CategoriesTable({ loading, categories, fetchCategoriesdD
                         )}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    );
+}
+
+function CategoryEditModal({ category, onSave, onClose }) {
+    const [name, setName] = useState(category.name);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSave(name);
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
+                <h2 className="text-xl font-bold mb-4">Edit Category</h2>
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full px-4 py-2 border rounded-lg mb-4"
+                    />
+                    <div className="flex gap-2 justify-end">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-4 py-2 bg-gray-200 rounded-lg"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="submit"
+                            className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );
